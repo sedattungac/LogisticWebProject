@@ -10,11 +10,10 @@ namespace DataAccessLayer.Concrete
 {
     public class Context : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public Context(DbContextOptions<Context> options) : base(options)
         {
-            optionsBuilder.UseSqlServer("server=DESKTOP-BUBEBSC; database=DbLogistic;integrated security=true");
-            //optionsBuilder.UseSqlServer("Data Source=185.87.254.56;Initial Catalog=logistic;User ID=logistic;Password=A.sd12345678987654321;persist security info=True");
         }
+
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<CustomerGroup> CustomerGroups { get; set; }

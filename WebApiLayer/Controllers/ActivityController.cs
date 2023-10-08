@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DataAccessLayer.Concrete;
+using EntityLayer.Entity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using WebApiLayer.DataAccessLayer.Concrete;
-using WebApiLayer.EntityLayer;
 
 namespace WebApiLayer.Controllers
 {
@@ -13,34 +9,37 @@ namespace WebApiLayer.Controllers
     [ApiController]
     public class ActivityController : ControllerBase
     {
+        private readonly Context _context;
+
+        public ActivityController(Context context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         public IActionResult ActivityList()
         {
-            using var c = new Context();
-            var values = c.Activities.ToList();
+            var values = _context.Activities.ToList();
             return Ok(values);
         }
         [HttpGet("{id}")]
         public IActionResult GetByIdActivity(int id)
         {
-            using var c = new Context();
-            var activityId = c.Activities.Where(x => x.ActivityId == id).ToList();
+            var activityId = _context.Activities.Where(x => x.ActivityId == id).ToList();
             return Ok(activityId);
         }
         [HttpPost]
         public IActionResult AddActivity(Activity activity)
         {
-            using var c = new Context();
-            c.Add(activity);
-            c.SaveChanges();
+            _context.Add(activity);
+            _context.SaveChanges();
             return Ok();
         }
 
         [HttpPut]
         public IActionResult EditActivity(Activity activity)
         {
-            using var c = new Context();
-            var activityId = c.Activities.Find(activity.ActivityId);
+            var activityId = _context.Activities.Find(activity.ActivityId);
             if (activityId == null)
             {
                 return NotFound();
@@ -49,18 +48,17 @@ namespace WebApiLayer.Controllers
             {
                 activityId.Description = activity.Description;
                 activityId.Title = activity.Title;
-                c.Update(activityId);
-                c.SaveChanges();
+                _context.Update(activityId);
+                _context.SaveChanges();
             }
             return Ok();
         }
         [HttpDelete("{id}")]
         public IActionResult DeleteActivity(int id)
         {
-            using var c = new Context();
-            var activityId = c.Activities.Find(id);
-            c.Remove(activityId);
-            c.SaveChanges();
+            var activityId = _context.Activities.Find(id);
+            _context.Remove(activityId);
+            _context.SaveChanges();
             return Ok();
         }
     }

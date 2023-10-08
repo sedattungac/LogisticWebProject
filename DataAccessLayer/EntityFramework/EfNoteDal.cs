@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.Repository;
 using EntityLayer.Entity;
 using System;
@@ -9,7 +10,10 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.EntityFramework
 {
-    public class EfNoteDal:GenericRepository<Note>,INoteDal
+    public class EfNoteDal : GenericRepository<Note>, INoteDal
     {
+        public EfNoteDal(Context context) : base(context)
+        {
+        }
     }
 }
