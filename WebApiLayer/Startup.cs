@@ -1,3 +1,4 @@
+using BusinessLayer;
 using DataAccessLayer.Concrete;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +31,11 @@ namespace WebApiLayer
         {
             services.AddControllers();
 
+            // This methods will be register application services
+            services
+                .AddBusinessServices()
+                .AddDataAccessServices();
+
             services.AddCors(options => options.AddPolicy(MyAllowSpecificOrigins, policy => {
                 policy
                       .AllowAnyOrigin()
@@ -37,7 +43,7 @@ namespace WebApiLayer
                       .AllowAnyMethod();
             }));
 
-            services.AddDbContext<Context>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<Context>(options => options.UseInMemoryDatabase("LogisticAppDb"));
 
             services.AddSwaggerGen(c =>
             {
